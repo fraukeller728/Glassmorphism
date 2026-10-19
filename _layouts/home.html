@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<section class="glass hero">
+  <h1>{{ page.title }}</h1>
+  {% if page.lead %}<p class="lead">{{ page.lead }}</p>{% endif %}
+  {% if page.button_text %}<a class="btn" href="{{ page.button_url | relative_url }}">{{ page.button_text }}</a>{% endif %}
+</section>
+
+<section class="glass content">
+  {{ content }}
+</section>
+
+<section id="projekte" class="cards">
+  {% for p in site.data.projekte %}
+  <a class="glass card" href="{{ p.url }}">
+    <h3>{{ p.title }}</h3>
+    <p>{{ p.text }}</p>
+  </a>
+  {% endfor %}
+</section>
