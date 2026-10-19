@@ -1,1 +1,191 @@
+/* ───────── Farben & Glas-Einstellungen (hier anpassen) ───────── */
+:root {
+  --bg: #0d1836;
+  --blob-a: #3ee0c8;
+  --blob-b: #ff5fa2;
+  --blob-c: #7b6bff;
+  --text: #eef2ff;
+  --muted: #b6c0e0;
+  --accent: #3ee0c8;
+  --glass: rgba(255, 255, 255, .08);
+  --glass-strong: rgba(255, 255, 255, .14);
+  --glass-border: rgba(255, 255, 255, .22);
+  --shadow: 0 10px 40px rgba(3, 8, 30, .35);
+  --blur: 18px;
+  --radius: 22px;
+  --font: "Avenir Next", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Roboto, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #e8edfb;
+    --blob-a: #6fe9d6;
+    --blob-b: #ff9cc5;
+    --blob-c: #a99cff;
+    --text: #14203d;
+    --muted: #4b5878;
+    --accent: #0a8f7c;
+    --glass: rgba(255, 255, 255, .45);
+    --glass-strong: rgba(255, 255, 255, .7);
+    --glass-border: rgba(255, 255, 255, .8);
+    --shadow: 0 10px 40px rgba(60, 70, 130, .18);
+  }
+}
 
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font: 1.0625rem/1.65 var(--font);
+  color: var(--text);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bunte Flächen hinter dem Glas – ohne sie sieht man den Blur nicht */
+.backdrop {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden;
+  background:
+    radial-gradient(40vmax 40vmax at 12% 18%, var(--blob-a), transparent 65%),
+    radial-gradient(45vmax 45vmax at 88% 28%, var(--blob-b), transparent 65%),
+    radial-gradient(50vmax 50vmax at 55% 95%, var(--blob-c), transparent 65%);
+  opacity: .75;
+}
+
+/* ───────── Glas ───────── */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, .25);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(150%);
+  backdrop-filter: blur(var(--blur)) saturate(150%);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--glass-strong); }
+}
+
+/* ───────── Layout ───────── */
+.wrap { width: min(100% - 2rem, 62rem); margin-inline: auto; }
+main.wrap { flex: 1; padding-block: 1.5rem 3rem; display: grid; gap: 1.5rem; align-content: start; }
+
+/* ───────── Header ───────── */
+.site-header {
+  position: sticky; top: 0; z-index: 10;
+  padding: .75rem 1rem 0;
+}
+.bar {
+  width: min(100%, 62rem); margin-inline: auto;
+  display: flex; align-items: center; gap: 1.25rem;
+  padding: .55rem .9rem .55rem 1.3rem;
+  border-radius: 999px;
+}
+.brand {
+  font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em;
+  color: var(--text); text-decoration: none; white-space: nowrap;
+}
+.nav { flex: 1; }
+.nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: .25rem; }
+.nav a {
+  display: block; padding: .45rem .95rem; border-radius: 999px;
+  color: var(--muted); text-decoration: none; font-weight: 500;
+  transition: background .2s, color .2s;
+}
+.nav a:hover, .nav a:focus-visible { color: var(--text); background: var(--glass-strong); }
+.nav a[aria-current="page"] {
+  color: var(--text); background: var(--glass-strong);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
+}
+.logo { margin-left: auto; display: flex; flex: none; }
+.logo img { height: 2.5rem; width: auto; display: block; }
+
+/* Untermenü */
+.has-sub { position: relative; }
+.sub {
+  display: none !important; position: absolute; top: 100%; left: 0; margin-top: .5rem;
+  min-width: 12rem; padding: .4rem; flex-direction: column; border-radius: 18px;
+}
+.has-sub:hover > .sub, .has-sub:focus-within > .sub { display: flex !important; }
+
+/* Mobile Menü (ohne JavaScript) */
+.nav-toggle {
+  position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;
+}
+.burger { display: none; cursor: pointer; width: 2.5rem; height: 2.5rem; position: relative; flex: none; }
+.burger span, .burger span::before, .burger span::after {
+  content: ""; position: absolute; left: 50%; width: 1.25rem; height: 2px;
+  background: var(--text); border-radius: 2px; transform: translateX(-50%);
+  transition: transform .25s, background .25s;
+}
+.burger span { top: 50%; margin-top: -1px; }
+.burger span::before { top: -6px; }
+.burger span::after { top: 6px; }
+.nav-toggle:focus-visible ~ .burger { outline: 2px solid var(--accent); border-radius: 50%; }
+.nav-toggle:checked ~ .burger span { background: transparent; }
+.nav-toggle:checked ~ .burger span::before { transform: translateX(-50%) translateY(6px) rotate(45deg); }
+.nav-toggle:checked ~ .burger span::after { transform: translateX(-50%) translateY(-6px) rotate(-45deg); }
+
+@media (max-width: 760px) {
+  .bar { flex-wrap: wrap; gap: .5rem; padding: .5rem .6rem .5rem 1.1rem; border-radius: 28px; }
+  .brand { order: 1; }
+  .logo { order: 2; }
+  .burger { display: block; order: 3; }
+  .nav { order: 4; flex-basis: 100%; display: none; padding-bottom: .4rem; }
+  .nav-toggle:checked ~ .nav { display: block; }
+  .nav ul { flex-direction: column; }
+  .sub { display: flex !important; position: static; box-shadow: none; border: 0; background: none;
+    backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0 0 0 1rem; margin: 0; }
+}
+
+/* ───────── Inhalte ───────── */
+.hero { padding: clamp(2rem, 6vw, 4.5rem); }
+.hero h1 { margin: 0 0 .75rem; font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.08; letter-spacing: -.03em; }
+.lead { font-size: 1.3rem; color: var(--muted); max-width: 36rem; margin: 0 0 1.5rem; }
+
+.btn {
+  display: inline-block; padding: .7rem 1.5rem; border-radius: 999px; font-weight: 600;
+  color: #0a1330; text-decoration: none;
+  background: linear-gradient(135deg, var(--blob-a), var(--blob-b));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .2);
+  transition: transform .2s, box-shadow .2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 0, 0, .28); }
+
+.content { padding: clamp(1.5rem, 4vw, 2.75rem); }
+.content > :first-child { margin-top: 0; }
+.content > :last-child { margin-bottom: 0; }
+.content h1 { font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: -.03em; line-height: 1.1; }
+.content h2 { font-size: 1.6rem; margin-top: 2rem; letter-spacing: -.02em; }
+.content h3 { font-size: 1.25rem; margin-top: 1.6rem; }
+.content p, .content li { max-width: 68ch; }
+.content a, .card a { color: var(--accent); }
+.content img { max-width: 100%; height: auto; border-radius: 16px; }
+.content hr { border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0; }
+.content blockquote {
+  margin: 1.5rem 0; padding: .6rem 1.25rem; border-left: 3px solid var(--accent);
+  background: var(--glass); border-radius: 0 14px 14px 0; color: var(--muted);
+}
+.content code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em;
+  background: var(--glass-strong); padding: .12em .4em; border-radius: 6px; }
+.content pre { overflow-x: auto; padding: 1rem 1.25rem; border-radius: 16px; background: rgba(5, 10, 30, .45); color: #eef2ff; }
+.content pre code { background: none; padding: 0; }
+.content table { display: block; overflow-x: auto; border-collapse: collapse; }
+.content th, .content td { padding: .5rem 1rem; border-bottom: 1px solid var(--glass-border); text-align: left; }
+
+/* Karten */
+.cards { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.card { display: block; padding: 1.6rem; text-decoration: none; color: var(--text);
+  transition: transform .2s, background .2s; }
+.card:hover, .card:focus-visible { transform: translateY(-4px); background: var(--glass-strong); }
+.card h3 { margin: 0 0 .5rem; font-size: 1.25rem; }
+.card p { margin: 0; color: var(--muted); }
+
+/* Footer */
+.site-footer { padding-block: 1.5rem 2rem; text-align: center; color: var(--muted); font-size: .92rem; }
+.site-footer p { margin: 0; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
