@@ -5,7 +5,7 @@ lang: de
 
 # Wenn die Seite unter https://BENUTZER.github.io/REPO/ läuft:
 # baseurl: "/REPO"   (bei BENUTZER.github.io leer lassen)
-baseurl: ""
+baseurl: "/Glassmorphism"
 url: ""
 
 # Logo rechts im Header (Pfad oder leer lassen für kein Logo)
