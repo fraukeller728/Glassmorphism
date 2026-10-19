@@ -1,0 +1,18 @@
+# ── Website-Einstellungen ──────────────────────────
+title: Mein Glasraum
+description: Eine Webseite aus Markdown und YAML.
+lang: de
+
+# Wenn die Seite unter https://BENUTZER.github.io/REPO/ läuft:
+# baseurl: "/REPO"   (bei BENUTZER.github.io leer lassen)
+baseurl: ""
+url: ""
+
+# Logo rechts im Header (Pfad oder leer lassen für kein Logo)
+logo: /assets/img/logo.svg
+logo_link: /
+
+footer: "Gebaut mit Jekyll auf GitHub Pages"
+
+markdown: kramdown
+permalink: pretty
